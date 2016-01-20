@@ -1,8 +1,11 @@
 /* Fill out these functions using Mongoose queries*/
-var mongoose = require('mongoose'),
-    Schema = mongoose.Schema,
-    Listing = require('./ListingSchema.js'),
-    config = require('./config');
+var   mongoose = require('mongoose'),
+      Schema = mongoose.Schema,
+      Listing = require('./ListingSchema.js'),
+      config = require('./config.js'),
+      listings = require('./listings.json'),
+      assert = require('assert'),
+      MongoClient = require('mongodb').MongoClient;
 
 var findLibraryWest = function(err, collection) {
 
