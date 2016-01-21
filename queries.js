@@ -7,74 +7,66 @@ var   mongoose = require('mongoose'),
       MongoClient = require('mongodb').MongoClient;
 
 
-var findLibraryWest = function(collection, Listing) {
+var findLibraryWest = function(collection) {
 
     console.log('Find Library West');
 
-    collection.find({ name : 'Library West' }, function(err, docs) {
-      if(err) throw err;
+    var found = collection.findOne({ name : 'Library West' }); 
+    if (found) 
+    	console.log('Found West'); 
+    console.log(found); 
 
-      console.log(docs.code);
-  });
-  /*
-    Find the document that contains data corresponding to Library West,
-    then log it to the console.
-   */
 };
-var removeCable = function(collection, Listing) {
+
+var removeCable = function(collection) {
 
   console.log('Remove CABL');
+// First find cabl to log it, then remove it. 
+    var found = collection.findOne({ code : 'CABL' }); 
+    console.log(found); 
 
-  Listing.findOneAndRemove({ code : 'CABL' }, function(err, docs) {
-    if(err) throw err;
 
-    console.log(docs);
+  collection.remove({ code : 'CABL' }, function(err) {
+    if(err) 
+	console.log('CABL not found');
   });
 
-  /*
-    Find the document with the code 'CABL'. This cooresponds with courses that can only be viewed
-    on cable TV. Since we live in the 21st century and most courses are now web based, go ahead
-    and remove this listing from your database and log the document to the console.
-   */
 };
-var updatePhelpsMemorial = function(collection, Listing) {
+var updatePhelpsMemorial = function(collection) {
 
   console.log('Update Phelps Lab');
 
-  Listing.findOneAndUpdate({ name : 'Phelps Laboratory' }, { address : '1953 Museum Rd Gainesville, FL 32611' }, function(err, docs) {
-    if(err) throw err;
-
-    console.log(docs);
-  });
-
-  /*
-    Phelps Memorial Hospital Center's address is incorrect. Find the listing, update it, and then
-    log the updated document to the console.
-   */
+  collection.update({ name : 'Phelps Laboratory' }, 
+  {
+            "code": "PHL", 
+            "name": "Phelps Laboratory", 
+            "coordinates": {
+                "latitude": 41.1091195, 
+                "longitude": -73.8639555
+            }, 
+            address : '1953 Museum Rd Gainesville, FL 32611'
+        }); 
 };
-var retrieveAllListings = function(collection, Listing) {
+
+var retrieveAllListings = function(collection) {
 
   console.log('Retrieve All Listings');
 
-  Listing.find({}, function(err, docs) {
-    if(err) throw err;
+  var found = collection.find({}, { code: 1, name: 1, coordinates: 1, address:1 }); 
+  if (found.hasNext()) 
+	console.log(found.next()); 
+// found is an object called a "cursor" which needs to be iterated though with next method. if empty return null
 
-    console.log(docs);
-  });
-
-  /*
-    Retrieve all listings in the database, and log them to the console.
-   */
-};
+ };
 
 MongoClient.connect(config.db.uri, function(err, db) {
-  assert.equal(null, err);
-  var collection = db.collection('documents');
-
-  findLibraryWest(collection, Listing);
-  removeCable(collection, Listing);
-  updatePhelpsMemorial(collection, Listing);
-  retrieveAllListings(collection, Listing);
-
-  db.close();
-});
+    assert.equal(null, err); 
+    if(err) throw err; 
+    console.log("Connected"); 
+    var collection = db.collection('documents'); 
+    findLibraryWest(collection); 
+    removeCable(collection); 
+    updatePhelpsMemorial(collection); 
+    retrieveAllListings(collection); 
+    db.close(); 
+}); 
