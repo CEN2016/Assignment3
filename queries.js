@@ -8,29 +8,28 @@ var   mongoose = require('mongoose'),
       MongoClient = require('mongodb').MongoClient;
 
 
-var findLibraryWest = function(err, collection) {
+var findLibraryWest = function(err, collection, Listing) {
 
-  console.log('Find Library West');
-  console.log(collection);
+    console.log('Find Library West');
 
-  Listing.find({ name : 'Library West' }, function(err, collection) {
-    if(err) throw err;
+    collection.find({ name : 'Library West' }, function(err, docs) {
+      if(err) throw err;
 
-    console.log(collection);
+      console.log(docs);
   });
   /*
     Find the document that contains data corresponding to Library West,
     then log it to the console.
    */
 };
-var removeCable = function(err, collection) {
+var removeCable = function(err, collection, Listing) {
 
   console.log('Remove Cable');
 
-  Listing.findOneAndRemove({ code : 'CABL' }, function(err, collection) {
+  Listing.findOneAndRemove({ code : 'CABL' }, function(err, docs) {
     if(err) throw err;
 
-    console.log(collection);
+    console.log(docs);
   });
 
   /*
@@ -39,14 +38,14 @@ var removeCable = function(err, collection) {
     and remove this listing from your database and log the document to the console.
    */
 };
-var updatePhelpsMemorial = function(err, listingSchema) {
+var updatePhelpsMemorial = function(err, collection, Listing) {
 
   console.log('Update Phelps Lab');
 
-  Listing.findOneAndUpdate({ name : 'Phelps Laboratory' }, { address : '1953 Museum Rd Gainesville, FL 32611' }, function(err, colleciton) {
+  Listing.findOneAndUpdate({ name : 'Phelps Laboratory' }, { address : '1953 Museum Rd Gainesville, FL 32611' }, function(err, docs) {
     if(err) throw err;
 
-    console.log(collection);
+    console.log(docs);
   });
 
   /*
@@ -54,14 +53,14 @@ var updatePhelpsMemorial = function(err, listingSchema) {
     log the updated document to the console.
    */
 };
-var retrieveAllListings = function(err, collection) {
+var retrieveAllListings = function(err, collection, Listing) {
 
   console.log('Retrieve All Listings');
 
-  Listing.find({}, function(err, collection) {
+  Listing.find({}, function(err, docs) {
     if(err) throw err;
 
-    console.log(collection);
+    console.log(docs);
   });
 
   /*
@@ -69,7 +68,14 @@ var retrieveAllListings = function(err, collection) {
    */
 };
 
-findLibraryWest(err, collection);
-removeCable();
-updatePhelpsMemorial();
-retrieveAllListings();
+MongoClient.connect(config.db.uri, function(err, db) {
+  assert.equal(null, err);
+  var collection = db.collection('documents');
+
+  findLibraryWest(err, collection, Listing);
+  removeCable(err, collection, Listing);
+  updatePhelpsMemorial(err, collection, Listing);
+  retrieveAllListings(err, collection, Listing);
+
+  db.close();
+});

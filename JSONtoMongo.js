@@ -17,8 +17,7 @@ MongoClient.connect(config.db.uri, function(err, db) {
     if(err) throw err;
     console.log("Connected");
     var collection = db.collection('documents');
-    for (var i in listings.entries)
-	   collection.insert(listings.entries[i]);
+    collection.insert(listings.entries);
     console.log("Entered listings into database");
     db.close();
 });
