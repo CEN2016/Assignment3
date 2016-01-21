@@ -11,6 +11,7 @@ var   mongoose = require('mongoose'),
 var findLibraryWest = function(err, collection) {
 
   console.log('Find Library West');
+  console.log(collection);
 
   Listing.find({ name : 'Library West' }, function(err, collection) {
     if(err) throw err;
@@ -40,9 +41,9 @@ var removeCable = function(err, collection) {
 };
 var updatePhelpsMemorial = function(err, listingSchema) {
 
-  console.log('Update Phelps Memorial');
+  console.log('Update Phelps Lab');
 
-  Listing.findOneAndUpdate({ name : 'Phelps Memorial Hospital Center' }, { address : '123 New Street' }, function(err, colleciton) {
+  Listing.findOneAndUpdate({ name : 'Phelps Laboratory' }, { address : '1953 Museum Rd Gainesville, FL 32611' }, function(err, colleciton) {
     if(err) throw err;
 
     console.log(collection);
@@ -68,7 +69,7 @@ var retrieveAllListings = function(err, collection) {
    */
 };
 
-findLibraryWest();
+findLibraryWest(err, collection);
 removeCable();
 updatePhelpsMemorial();
 retrieveAllListings();
