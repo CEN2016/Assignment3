@@ -4,8 +4,8 @@ var mongoose = require('mongoose'),
 
 /* Create your schema */
 var listingSchema = new Schema({
-  code: String,
-  name: String,
+  code: { type: String, required: true, unique: true },
+  name: { type: String, required: true, unique: true },
   coordinates: {
   	latitude: Number,
   	longitude: Number
@@ -19,10 +19,6 @@ listingSchema.pre('save', function(next) {
     this.update_at = currentDate;
     if (!this.created_at)
         this.created_at = currentDate;
-    if (!this.name)
-    	throw new Error('Name not provided');
-    if (!this.code)
-    	throw new Error('Code not provided');
     next();
 });
 
